@@ -6,15 +6,15 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHome(){
+  getHome() {
     return 'Hello World';
   }
   @Get('post')
-  getPost(){
+  getPost() {
     return 'Post Page';
   }
   @Get('user')
-  getUser(){
+  getUser() {
     return 'User';
   }
 }
