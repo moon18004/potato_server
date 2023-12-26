@@ -1,10 +1,12 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 import { RolesEnum } from '../const/roles.const';
 import { PostsModel } from 'src/posts/entities/posts.entity';
+import { BaseModel } from 'src/common/entity/base.entity';
 
 @Entity()
 export class UsersModel extends BaseModel {
   @Column({
+    length: 16,
     unique: true
   })
   nickname: string;
@@ -16,6 +18,9 @@ export class UsersModel extends BaseModel {
 
   @Column()
   password: string;
+
+  @Column()
+  country: string;
 
   @Column({
     enum: Object.values(RolesEnum),
