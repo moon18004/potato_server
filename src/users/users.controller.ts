@@ -6,7 +6,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  getUsers(){
+  getUsers() {
     return this.usersService.getUsers();
   }
 
@@ -17,6 +17,11 @@ export class UsersController {
     @Body('password') password: string,
     @Body('country') country: string
   ) {
-    return this.usersService.createUser(nickname, email, password, country);
+    return this.usersService.createUser({
+      nickname,
+      email,
+      password,
+      country
+    });
   }
 }
