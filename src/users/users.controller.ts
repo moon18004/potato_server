@@ -10,18 +10,18 @@ export class UsersController {
     return this.usersService.getUsers();
   }
 
-  @Post()
-  postUser(
-    @Body('nickname') nickname: string,
-    @Body('email') email: string,
-    @Body('password') password: string,
-    @Body('country') country: string
-  ) {
-    return this.usersService.createUser({
-      nickname,
-      email,
-      password,
-      country
-    });
-  }
+  // @Post()
+  // postUser(
+  //   @Body('nickname') nickname: string,
+  //   @Body('email') email: string,
+  //   @Body('password') password: string,
+  //   @Body('country') country: string
+  // ) {
+  //   return this.usersService.createUser({
+  //     nickname,
+  //     email,
+  //     password,
+  //     country
+  //   });
+  // }
 }
