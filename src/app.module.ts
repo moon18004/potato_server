@@ -10,6 +10,7 @@ import { UsersModel } from './users/entities/users.entity';
 import { CoursesModule } from './courses/courses.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { CoursesModel } from './courses/entities/courses.entity';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
       username: 'postgres',
       password: 'postgres',
       database: 'postgres',
-      entities: [PostsModel, UsersModel],
+      entities: [PostsModel, UsersModel, CoursesModel],
       synchronize: true
     }),
     PostsModule,
