@@ -18,15 +18,15 @@ export class PostsService {
       relations: {
         author: true
       },
-      select: {
-        author: {
-          id: true,
-          nickname: true,
-          email: true,
-          country: true,
-          role: true
-        }
-      }
+      // select: {
+      //   author: {
+      //     id: true,
+      //     nickname: true,
+      //     email: true,
+      //     country: true,
+      //     role: true
+      //   }
+      // }
     });
   }
   async getPostById(id: number) {
