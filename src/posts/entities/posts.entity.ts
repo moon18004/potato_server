@@ -1,3 +1,4 @@
+import { IsString } from 'class-validator';
 import { BaseModel } from 'src/common/entity/base.entity';
 import { UsersModel } from 'src/users/entities/users.entity';
 import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
@@ -13,9 +14,15 @@ export class PostsModel extends BaseModel {
   author: UsersModel;
 
   @Column()
+  @IsString({
+    message: 'Titile should be string type.'
+  })
   title: string;
 
   @Column()
+  @IsString({
+    message: 'content should be string type.'
+  })
   content: string;
 
   @Column()

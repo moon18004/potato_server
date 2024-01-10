@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Put,
   Query,
@@ -14,6 +15,9 @@ import {
 import { PostsService } from './posts.service';
 import { UsersModel } from 'src/users/entities/users.entity';
 import { AccessTokenGuard } from 'src/auth/guard/bearer-token.guard';
+import { User } from 'src/users/decorator/user.decorator';
+import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -29,23 +33,30 @@ export class PostsController {
     return this.postsService.getPostById(id);
   }
 
+  // DTO - Data Transfer Object
   @Post()
   @UseGuards(AccessTokenGuard)
-  postPost(@Request() req: any, @Body('title') title: string, @Body('content') content: string) {
-    const authorId = req.user.id;;
-    return this.postsService.createPost(authorId, title, content);
+  postPost(
+    @User() user: UsersModel,
+    @Body() body: CreatePostDto
+    // @Body('title') title: string,
+    // @Body('content') content: string
+  ) {
+    return this.postsService.createPost(user.id, body);
   }
 
-  @Put(':id')
-  putPost(
+  @Patch(':id')
+  @UseGuards(AccessTokenGuard)
+  patchPost(
     @Param('id', ParseIntPipe) id: number,
-    @Body('title') title?: string,
-    @Body('content') content?: string
+    @User() user: UsersModel,
+    @Body() body: UpdatePostDto
   ) {
-    return this.postsService.updatePost(id, title, content);
+    return this.postsService.updatePost(user.id, id, body);
   }
 
   @Delete(':id')
+  @UseGuards(AccessTokenGuard)
   deletePost(@Param('id', ParseIntPipe) id: number) {
     return this.postsService.deletePost(id);
   }
