@@ -17,7 +17,7 @@ export class PostsService {
     return await this.postsRepository.find({
       relations: {
         author: true
-      },
+      }
       // select: {
       //   author: {
       //     id: true,
@@ -59,7 +59,8 @@ export class PostsService {
       },
       ...postDto,
       likeCount: 0,
-      commentCount: 0
+      commentCount: 0,
+      viewCount: 0
     });
     const newPost = await this.postsRepository.save(post);
 
@@ -99,14 +100,52 @@ export class PostsService {
     return newPost;
   }
 
-  async deletePost(postId: number) {
+  async incrementViews(postId) {
     const post = await this.postsRepository.findOne({
       where: {
         id: postId
       }
     });
+    post.viewCount += 1;
+    const updated = await this.postsRepository.save(post);
+    return updated;
+  }
+  async incrementLikes(postId) {
+    const post = await this.postsRepository.findOne({
+      where: {
+        id: postId
+      }
+    });
+    post.likeCount += 1;
+    const updated = await this.postsRepository.save(post);
+    return updated;
+  }
+  async decrementLikes(postId) {
+    const post = await this.postsRepository.findOne({
+      where: {
+        id: postId
+      }
+    });
+    post.likeCount -= 1;
+    const updated = await this.postsRepository.save(post);
+    return updated;
+  }
+
+  async deletePost(userId: number, postId: number) {
+    const post = await this.postsRepository.findOne({
+      where: {
+        id: postId
+      },
+      relations: {
+        author: true
+      }
+    });
     if (!post) {
       throw new NotFoundException();
+    }
+    // console.log(post);
+    if (userId !== post.author.id) {
+      throw new UnauthorizedException("Cannot delete other's post");
     }
     await this.postsRepository.delete(postId);
 

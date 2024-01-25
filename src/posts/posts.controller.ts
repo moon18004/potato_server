@@ -55,9 +55,24 @@ export class PostsController {
     return this.postsService.updatePost(user.id, id, body);
   }
 
+  @Patch('view/:id')
+  incrementViews(@Param('id', ParseIntPipe) id: number) {
+    return this.postsService.incrementViews(id);
+  }
+
+  @Patch('ilike/:id')
+  incrementLikes(@Param('id', ParseIntPipe) id: number,) {
+    return this.postsService.incrementLikes(id);
+  }
+
+  @Patch('dlike/:id')
+  decrementLikes(@Param('id', ParseIntPipe) id: number,) {
+    return this.postsService.decrementLikes(id);
+  }
+
   @Delete(':id')
   @UseGuards(AccessTokenGuard)
-  deletePost(@Param('id', ParseIntPipe) id: number) {
-    return this.postsService.deletePost(id);
+  deletePost(@Param('id', ParseIntPipe) id: number, @User() user: UsersModel) {
+    return this.postsService.deletePost(user.id, id);
   }
 }

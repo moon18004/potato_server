@@ -1,7 +1,8 @@
-import { IsString } from 'class-validator';
+import { IsString, Length } from 'class-validator';
 import { BaseModel } from 'src/common/entity/base.entity';
 import { UsersModel } from 'src/users/entities/users.entity';
 import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { TypesEnum } from '../const/type.const';
 
 @Entity()
 export class PostsModel extends BaseModel {
@@ -17,12 +18,14 @@ export class PostsModel extends BaseModel {
   @IsString({
     message: 'Titile should be string type.'
   })
+  @Length(4)
   title: string;
 
   @Column()
   @IsString({
     message: 'content should be string type.'
   })
+  @Length(4)
   content: string;
 
   @Column()
@@ -30,4 +33,13 @@ export class PostsModel extends BaseModel {
 
   @Column()
   commentCount: number;
+
+  @Column()
+  viewCount: number;
+
+  @Column({
+    enum: Object.values(TypesEnum),
+    default: TypesEnum.COMMON
+  })
+  type: TypesEnum;
 }

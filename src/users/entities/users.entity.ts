@@ -45,7 +45,7 @@ export class UsersModel extends BaseModel {
    * toPlainOnly => plain object로 변환 될 때
    */
   @Exclude({
-    toPlainOnly: true,
+    toPlainOnly: true
   })
   password: string;
 
