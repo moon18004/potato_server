@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
 import { RolesEnum } from '../const/roles.const';
 import { PostsModel } from 'src/posts/entities/posts.entity';
 import { BaseModel } from 'src/common/entity/base.entity';
@@ -7,6 +7,7 @@ import { lengthValidationMessage } from 'src/common/validation-message/length-va
 import { stringValidationMessage } from 'src/common/validation-message/string-validation.message';
 import { emailValidationMessage } from 'src/common/validation-message/email-validation.message';
 import { Exclude } from 'class-transformer';
+import { CoursesModel } from 'src/courses/entities/courses.entity';
 
 @Entity()
 export class UsersModel extends BaseModel {
@@ -59,6 +60,12 @@ export class UsersModel extends BaseModel {
   })
   role: RolesEnum;
 
+  @OneToMany(() => CoursesModel, course => course.author)
+  @JoinColumn({ name: 'author' })
+  courses: CoursesModel[];
+
   @OneToMany(() => PostsModel, post => post.author)
+  @JoinColumn({ name: 'author' })
   posts: PostsModel[];
+
 }

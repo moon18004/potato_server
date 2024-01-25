@@ -22,7 +22,6 @@ export class CoursesService {
     console.log(subject);
     const course = this.coursesRepository.create({
       author,
-      class_name,
       content,
       subject,
       class_code,
