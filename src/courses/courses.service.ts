@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CoursesModel } from './entities/courses.entity';
 import { Repository } from 'typeorm';
+import { UsersModel } from 'src/users/entities/users.entity';
+import { CreateCourseDto } from './dto/create-course.dto';
 
 @Injectable()
 export class CoursesService {
@@ -12,19 +14,12 @@ export class CoursesService {
   async getCourses() {
     return await this.coursesRepository.find();
   }
-  async createCourse(
-    author: string,
-    class_name: string,
-    content: string,
-    subject: string,
-    class_code: string
-  ) {
-    console.log(subject);
+  async createCourse(author_id: number, courseDto: CreateCourseDto) {
     const course = this.coursesRepository.create({
-      author,
-      content,
-      subject,
-      class_code,
+      author: {
+        id: author_id
+      },
+      ...courseDto,
       like_count: 0,
       comment_count: 0
     });
