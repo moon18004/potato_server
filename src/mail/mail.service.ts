@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
 import { UsersService } from 'src/users/users.service';
 
@@ -6,15 +7,18 @@ import { UsersService } from 'src/users/users.service';
 export class MailService {
   private transporter;
   private OTPs = {};
-  constructor(private readonly usersService: UsersService) {
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly configService: ConfigService
+  ) {
     this.transporter = nodemailer.createTransport({
       // SMTP 설정
       host: 'smtp.gmail.com', //smtp 호스트
       port: 587,
       secure: false,
       auth: {
-        user: 'bkmoon0790@gmail.com',
-        pass: 'fsizaowqexfxfkkp'
+        user: configService.get('MAILER_ID'),
+        pass: configService.get('MAILER_PASS')
       }
     });
   }

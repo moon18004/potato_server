@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CoursesModel } from './courses/entities/courses.entity';
 import { MailModule } from './mail/mail.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -24,6 +25,10 @@ import { MailModule } from './mail/mail.module';
       database: 'postgres',
       entities: [PostsModel, UsersModel, CoursesModel],
       synchronize: true
+    }),
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true
     }),
     PostsModule,
     CommonModule,
