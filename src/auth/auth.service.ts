@@ -159,7 +159,7 @@ export class AuthService {
   
   async registerWithEmail(user: RegisterUserDto) {
     const hash = await bcrypt.hash(user.password, HASH_ROUNDS);
-
+    // console.log(user);
     const newUser = await this.usersService.createUser({
       ...user,
       password: hash

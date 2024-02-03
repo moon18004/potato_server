@@ -22,7 +22,12 @@ export class UsersService {
     return user;
   }
 
-  async createUser(user: Pick<UsersModel, 'email' | 'nickname' | 'password' | 'country'>) {
+  async createUser(
+    user: Pick<
+      UsersModel,
+      'email' | 'nickname' | 'password' | 'country' | 'countryUrl' | 'fullName'
+    >
+  ) {
     const nicknameExists = await this.userRepository.exist({
       where: { nickname: user.nickname }
     });
@@ -40,7 +45,9 @@ export class UsersService {
       nickname: user.nickname,
       email: user.email,
       password: user.password,
-      country: user.country
+      country: user.country,
+      countryUrl: user.countryUrl,
+      fullName: user.fullName
     });
 
     const newUser = await this.userRepository.save(userObject);

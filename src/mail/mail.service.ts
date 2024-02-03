@@ -33,7 +33,8 @@ export class MailService {
 
     this.OTPs[to] = Math.floor(Math.random() * 888889);
     // console.log(this.OTP);
-    console.log(this.OTPs);
+    // console.log(this.OTPs);
+    // console.log(to);
 
     try {
       await this.transporter.sendMail({
@@ -56,6 +57,7 @@ export class MailService {
         },
         1000 * 60 * 5
       );
+      return true;
     } catch (error) {
       console.error('메일 전송 중 오류가 발생했습니다:', error);
     }
@@ -65,8 +67,10 @@ export class MailService {
   }
   confirmVerificationCode(to: string, code: number) {
     // console.log(this.OTPs[to]);
+    console.log(`mail service line 70 ${to} ${code}`);
     if (code === this.OTPs[to]) {
       this.clearOTP();
+      console.log('asdf');
       return true;
     } else {
       throw new UnauthorizedException('Code is not correct');
