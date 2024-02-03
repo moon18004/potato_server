@@ -54,6 +54,14 @@ export class UsersModel extends BaseModel {
   @IsString()
   country: string;
 
+  @Column()
+  @IsString()
+  countryUrl: string;
+
+  @Column()
+  @IsString()
+  fullName: string;
+
   @Column({
     enum: Object.values(RolesEnum),
     default: RolesEnum.USER
