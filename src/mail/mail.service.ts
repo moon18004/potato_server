@@ -1,0 +1,71 @@
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import * as nodemailer from 'nodemailer';
+import { UsersService } from 'src/users/users.service';
+
+@Injectable()
+export class MailService {
+  private transporter;
+  private OTPs = {};
+  constructor(private readonly usersService: UsersService) {
+    this.transporter = nodemailer.createTransport({
+      // SMTP 설정
+      host: 'smtp.gmail.com', //smtp 호스트
+      port: 587,
+      secure: false,
+      auth: {
+        user: 'bkmoon0790@gmail.com',
+        pass: 'fsizaowqexfxfkkp'
+      }
+    });
+  }
+  async sendMail(to: string) {
+    // console.log('22)');
+    // console.log(to);
+    const checkUser = await this.usersService.checkUser(to);
+    // console.log(checkUser);
+    if (checkUser) {
+      throw new BadRequestException('Email already exists.');
+    }
+
+    this.OTPs[to] = Math.floor(Math.random() * 888889);
+    // console.log(this.OTP);
+    console.log(this.OTPs);
+
+    try {
+      await this.transporter.sendMail({
+        from: 'noreply@potato.com',
+        to: to, //string or Array
+        subject: 'Varicication code Potato',
+        text: `Hi, here's your verification code: ${this.OTPs[to]}`
+        /* 
+        html: htmlData, //내용이 html이라면 text 대신 사용
+        cc: [ex1@kigo.com, ex2@kigo.com] //참조
+        attachments: attachments //첨부파일
+        */
+      });
+      console.log('메일이 전송되었습니다 mailservice 38');
+      setTimeout(
+        () => {
+          if (Object.keys(this.OTPs).includes(to)) {
+            delete this.OTPs[to];
+          }
+        },
+        1000 * 60 * 5
+      );
+    } catch (error) {
+      console.error('메일 전송 중 오류가 발생했습니다:', error);
+    }
+  }
+  clearOTP() {
+    // this.OTP = null;
+  }
+  confirmVerificationCode(to: string, code: number) {
+    // console.log(this.OTPs[to]);
+    if (code === this.OTPs[to]) {
+      this.clearOTP();
+      return true;
+    } else {
+      throw new UnauthorizedException('Code is not correct');
+    }
+  }
+}

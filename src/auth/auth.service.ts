@@ -156,7 +156,7 @@ export class AuthService {
 
     return this.loginUser(existingUser);
   }
-
+  
   async registerWithEmail(user: RegisterUserDto) {
     const hash = await bcrypt.hash(user.password, HASH_ROUNDS);
 

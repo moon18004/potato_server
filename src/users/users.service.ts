@@ -14,6 +14,14 @@ export class UsersService {
     return this.userRepository.find();
   }
 
+  async checkUser(email: string) {
+    const user = await this.userRepository.exists({
+      where: { email }
+    });
+    // console.log(user);
+    return user;
+  }
+
   async createUser(user: Pick<UsersModel, 'email' | 'nickname' | 'password' | 'country'>) {
     const nicknameExists = await this.userRepository.exist({
       where: { nickname: user.nickname }
