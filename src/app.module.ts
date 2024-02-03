@@ -11,6 +11,7 @@ import { CoursesModule } from './courses/courses.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CoursesModel } from './courses/entities/courses.entity';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { CoursesModel } from './courses/entities/courses.entity';
     CommonModule,
     UsersModule,
     CoursesModule,
-    AuthModule
+    AuthModule,
+    MailModule
   ],
   controllers: [AppController],
   providers: [
