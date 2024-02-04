@@ -68,7 +68,6 @@ export class AuthService {
       throw new UnauthorizedException('Token is expired or wrong');
     }
   }
-
   rotateToken(token: string, isRefreshToken: boolean) {
     const decoded = this.jwtService.verify(token, {
       secret: JWT_SECRET
@@ -84,6 +83,24 @@ export class AuthService {
       },
       isRefreshToken
     );
+  }
+  reissueAccessToken(token: string) {
+    try {
+      const decoded = this.jwtService.verify(token, {
+        secret: JWT_SECRET
+      });
+      if (decoded.type !== 'refresh') {
+        throw new UnauthorizedException('Token reissuance should be with refresh token.');
+      }
+      return this.signToken(
+        {
+          ...decoded
+        },
+        false
+      );
+    } catch (e) {
+      throw new UnauthorizedException('Refresh token is expired or wrong');
+    }
   }
 
   /*
@@ -156,7 +173,7 @@ export class AuthService {
 
     return this.loginUser(existingUser);
   }
-  
+
   async registerWithEmail(user: RegisterUserDto) {
     const hash = await bcrypt.hash(user.password, HASH_ROUNDS);
     // console.log(user);

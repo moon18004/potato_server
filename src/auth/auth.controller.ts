@@ -59,7 +59,12 @@ export class AuthController {
     // password: string,
     // @Body('country') country: string
   ) {
-    
     return this.authService.registerWithEmail(body);
+  }
+  @Post('verify')
+  // @UseGuards(AccessTokenGuard)
+  verifyToken(@Headers('authorization') rawToken: string){
+    const token = this.authService.extractTokenFromHeader(rawToken, true);
+    return this.authService.verifyToken(token);
   }
 }

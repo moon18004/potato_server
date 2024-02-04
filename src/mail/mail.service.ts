@@ -70,7 +70,7 @@ export class MailService {
     console.log(`mail service line 70 ${to} ${code}`);
     if (code === this.OTPs[to]) {
       this.clearOTP();
-      console.log('asdf');
+
       return true;
     } else {
       throw new UnauthorizedException('Code is not correct');
