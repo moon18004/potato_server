@@ -17,6 +17,9 @@ export class PostsService {
     return await this.postsRepository.find({
       relations: {
         author: true
+      },
+      order: {
+        id: 'DESC'
       }
       // select: {
       //   author: {
@@ -43,7 +46,8 @@ export class PostsService {
           nickname: true,
           email: true,
           country: true,
-          role: true
+          role: true,
+          countryUrl: true
         }
       }
     });

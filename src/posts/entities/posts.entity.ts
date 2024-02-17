@@ -3,6 +3,7 @@ import { BaseModel } from 'src/common/entity/base.entity';
 import { UsersModel } from 'src/users/entities/users.entity';
 import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { TypesEnum } from '../const/type.const';
+import { CategoryEnum } from '../const/category.const';
 
 @Entity()
 export class PostsModel extends BaseModel {
@@ -36,6 +37,12 @@ export class PostsModel extends BaseModel {
 
   @Column()
   viewCount: number;
+
+  @Column({
+    enum: Object.values(CategoryEnum),
+    default: CategoryEnum.ETC
+  })
+  category: CategoryEnum;
 
   @Column({
     enum: Object.values(TypesEnum),

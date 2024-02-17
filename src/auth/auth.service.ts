@@ -132,10 +132,12 @@ export class AuthService {
    * 2) sub => id
    * 3) type : 'access' | 'refresh'
    */
-  signToken(user: Pick<UsersModel, 'email' | 'id'>, isRefreshToken: boolean) {
+  // signToken(user: Pick<UsersModel, 'email' | 'id'>, isRefreshToken: boolean) {
+  signToken(user: UsersModel, isRefreshToken: boolean) {
     const payload = {
       email: user.email,
       sub: user.id,
+      role: user.role,
       type: isRefreshToken ? 'refresh' : 'access'
     };
 
@@ -144,7 +146,8 @@ export class AuthService {
       expiresIn: isRefreshToken ? 86400 : 1800
     });
   }
-  loginUser(user: Pick<UsersModel, 'email' | 'id'>) {
+  // loginUser(user: Pick<UsersModel, 'email' | 'id'>) {
+  loginUser(user: UsersModel) {
     return {
       accessToken: this.signToken(user, false),
       refreshToken: this.signToken(user, true)
