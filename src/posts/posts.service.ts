@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UsersModel } from 'src/users/entities/users.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { CategoryEnum } from './const/category.const';
+import { TypesEnum } from './const/type.const';
 
 @Injectable()
 export class PostsService {
@@ -14,12 +16,18 @@ export class PostsService {
   ) {}
 
   async getAllPosts() {
-    return await this.postsRepository.find({
+    const res = await this.postsRepository.find({
+      where: [
+        {
+          type: TypesEnum.COMMON
+        }
+      ],
       relations: {
         author: true
       },
       order: {
         id: 'DESC'
+        // type: 'ASC'
       }
       // select: {
       //   author: {
@@ -30,6 +38,27 @@ export class PostsService {
       //     role: true
       //   }
       // }
+    });
+    // console.log(res);
+    return res;
+  }
+  async getSpecialPosts() {
+    return await this.postsRepository.find({
+      where: [
+        {
+          type: TypesEnum.ANN
+        },
+        {
+          type: TypesEnum.POPULAR
+        }
+      ],
+      relations: {
+        author: true
+      },
+      order: {
+        // id: 'DESC'
+        type: 'ASC'
+      }
     });
   }
   async getPostById(id: number) {
@@ -70,9 +99,18 @@ export class PostsService {
 
     return newPost;
   }
+  async generatePosts(userId: number) {
+    for (let i = 0; i < 100; i++) {
+      await this.createPost(userId, {
+        title: `Random Post ${i}`,
+        content: `Random content ${i}`,
+        category: CategoryEnum.ETC
+      });
+    }
+  }
 
   async updatePost(userId: number, postId: number, postDto: UpdatePostDto) {
-    const { title, content } = postDto;
+    const { title, content, category } = postDto;
     const post = await this.postsRepository.findOne({
       where: {
         id: postId
@@ -98,13 +136,41 @@ export class PostsService {
     if (content) {
       post.content = content;
     }
+    if (category) {
+      post.category = category;
+    }
 
     const newPost = await this.postsRepository.save(post);
 
     return newPost;
   }
+  async updateType(role: string, postDto: UpdatePostDto, id: number) {
+    const { type } = postDto;
+    if (role === 'ADMIN') {
+      const post = await this.postsRepository.findOne({
+        where: {
+          id
+        },
+        relations: {
+          author: true
+        },
+        select: {
+          author: {
+            id: true
+          }
+        }
+      });
 
-  async incrementViews(postId) {
+      post.type = type;
+
+      const newPost = await this.postsRepository.save(post);
+      return newPost;
+    } else {
+      throw new UnauthorizedException('You are not admin user.');
+    }
+  }
+
+  async incrementViews(postId: number) {
     const post = await this.postsRepository.findOne({
       where: {
         id: postId
@@ -135,7 +201,7 @@ export class PostsService {
     return updated;
   }
 
-  async deletePost(userId: number, postId: number) {
+  async deletePost(userId: number, role: string, postId: number) {
     const post = await this.postsRepository.findOne({
       where: {
         id: postId
@@ -148,7 +214,8 @@ export class PostsService {
       throw new NotFoundException();
     }
     // console.log(post);
-    if (userId !== post.author.id) {
+
+    if (role !== 'ADMIN' && userId !== post.author.id) {
       throw new UnauthorizedException("Cannot delete other's post");
     }
     await this.postsRepository.delete(postId);
