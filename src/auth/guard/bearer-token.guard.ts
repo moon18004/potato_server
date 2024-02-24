@@ -11,7 +11,9 @@ export class BearerTokenGuard implements CanActivate {
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
+    // console.log(req);
     const rawToken = req.headers['authorization'];
+    // console.log(req.headers['authorization']);
     if (!rawToken) {
       throw new UnauthorizedException("Token doesn't exist");
     }

@@ -27,6 +27,10 @@ export class PostsController {
   getPosts() {
     return this.postsService.getAllPosts();
   }
+  @Get('crucials')
+  getCrucialPosts() {
+    return this.postsService.getSpecialPosts();
+  }
 
   @Get(':id')
   getPost(@Param('id', ParseIntPipe) id: number) {
@@ -45,6 +49,13 @@ export class PostsController {
     return this.postsService.createPost(user.id, body);
   }
 
+  @Post('random')
+  @UseGuards(AccessTokenGuard)
+  async postPostsRandom(@User() user: UsersModel) {
+    await this.postsService.generatePosts(user.id);
+    return true;
+  }
+
   @Patch(':id')
   @UseGuards(AccessTokenGuard)
   patchPost(
@@ -54,6 +65,15 @@ export class PostsController {
   ) {
     return this.postsService.updatePost(user.id, id, body);
   }
+  @Patch('popular/:id')
+  @UseGuards(AccessTokenGuard)
+  patchType(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdatePostDto,
+    @User() user: UsersModel
+  ) {
+    return this.postsService.updateType(user.role, body, id);
+  }
 
   @Patch('view/:id')
   incrementViews(@Param('id', ParseIntPipe) id: number) {
@@ -61,18 +81,18 @@ export class PostsController {
   }
 
   @Patch('ilike/:id')
-  incrementLikes(@Param('id', ParseIntPipe) id: number,) {
+  incrementLikes(@Param('id', ParseIntPipe) id: number) {
     return this.postsService.incrementLikes(id);
   }
 
   @Patch('dlike/:id')
-  decrementLikes(@Param('id', ParseIntPipe) id: number,) {
+  decrementLikes(@Param('id', ParseIntPipe) id: number) {
     return this.postsService.decrementLikes(id);
   }
 
   @Delete(':id')
   @UseGuards(AccessTokenGuard)
   deletePost(@Param('id', ParseIntPipe) id: number, @User() user: UsersModel) {
-    return this.postsService.deletePost(user.id, id);
+    return this.postsService.deletePost(user.id, user.role, id);
   }
 }
