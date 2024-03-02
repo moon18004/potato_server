@@ -112,7 +112,7 @@ export class UsersService {
     }
 
     const newUser = await this.userRepository.save(user);
-    console.log(newUser);
+    // console.log(newUser);
     return newUser;
   }
 }
