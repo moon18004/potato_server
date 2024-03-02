@@ -23,8 +23,11 @@ export class CoursesModel extends BaseModel {
   @Length(3)
   class_code: string;
 
-  @Column()
-  content: string;
+  @Column('text', { array: true, default: '{}' })
+  base_content: string[];
+
+  @Column('text', { array: true, default: '{}' })
+  add_content: string[];
 
   @Column()
   like_count: number;
