@@ -45,9 +45,9 @@ export class UsersModel extends BaseModel {
    * backend => frontend: class instance(dto) => plain object(JSON)
    * toPlainOnly => plain object로 변환 될 때
    */
-  @Exclude({
-    toPlainOnly: true
-  })
+  // @Exclude({
+  //   toPlainOnly: true
+  // })
   password: string;
 
   @Column()
