@@ -1,7 +1,16 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersModel } from './entities/users.entity';
 import { Repository } from 'typeorm';
+import { HASH_ROUNDS } from '../auth/const/auth.const';
+import * as bcrypt from 'bcrypt';
+
+import { EditUserDto } from 'src/auth/dto/edit-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -61,5 +70,49 @@ export class UsersService {
         email
       }
     });
+  }
+
+  async updateUser(email: string, userDto: EditUserDto) {
+    const { nickname, fullName, password, country, currentPwd, countryUrl } = userDto;
+    const user = await this.userRepository.findOne({
+      where: {
+        email
+      }
+    });
+    // console.log(password);
+    // console.log(user.password);
+    // console.log()
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    if (nickname) {
+      user.nickname = nickname;
+    }
+    if (fullName) {
+      user.fullName = fullName;
+    }
+    if (country) {
+      user.country = country;
+    }
+    if (countryUrl) {
+      user.countryUrl = countryUrl;
+    }
+
+    if (password) {
+      const passOk = await bcrypt.compare(currentPwd, user.password);
+      if (passOk) {
+        const hash = await bcrypt.hash(password, HASH_ROUNDS);
+        // console.log(hash);
+        user.password = hash;
+      } else {
+        throw new UnauthorizedException('Current password is not correct.');
+      }
+    }
+
+    const newUser = await this.userRepository.save(user);
+    console.log(newUser);
+    return newUser;
   }
 }

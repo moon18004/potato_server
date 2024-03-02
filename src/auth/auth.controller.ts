@@ -1,7 +1,10 @@
 import {
   Body,
   Controller,
+  Get,
   Headers,
+  Param,
+  Patch,
   Post,
   Request,
   UnauthorizedException,
@@ -12,6 +15,7 @@ import { MaxLengthPipe, MinLengthPipe, PasswordPipe } from './pipe/password.pipe
 import { BasicTokenGuard } from './guard/basic-token.guard';
 import { AccessTokenGuard, RefreshTokenGuard } from './guard/bearer-token.guard';
 import { RegisterUserDto } from './dto/register-user.dto';
+import { EditUserDto } from './dto/edit-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -63,8 +67,19 @@ export class AuthController {
   }
   @Post('verify')
   // @UseGuards(AccessTokenGuard)
-  verifyToken(@Headers('authorization') rawToken: string){
+  verifyToken(@Headers('authorization') rawToken: string) {
     const token = this.authService.extractTokenFromHeader(rawToken, true);
     return this.authService.verifyToken(token);
+  }
+  @Get(':email')
+  @UseGuards(AccessTokenGuard)
+  getUser(@Param('email') email: string) {
+    return this.authService.getUserByEmail(email);
+  }
+
+  @Patch('edit/:email')
+  @UseGuards(AccessTokenGuard)
+  patchUser(@Param('email') email: string, @Body() body: EditUserDto) {
+    return this.authService.updateUser(email, body);
   }
 }

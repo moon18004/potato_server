@@ -3,10 +3,14 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Get,
+  Param,
+  ParseIntPipe,
   Post,
+  UseGuards,
   UseInterceptors
 } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { AccessTokenGuard } from 'src/auth/guard/bearer-token.guard';
 
 @Controller('users')
 export class UsersController {

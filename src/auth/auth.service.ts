@@ -5,6 +5,8 @@ import { UsersModel } from 'src/users/entities/users.entity';
 import { HASH_ROUNDS, JWT_SECRET } from './const/auth.const';
 import * as bcrypt from 'bcrypt';
 import { RegisterUserDto } from './dto/register-user.dto';
+import { EditUserDto } from './dto/edit-user.dto';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
@@ -187,5 +189,14 @@ export class AuthService {
     // const newUser = await this.usersService.createUser(user);
 
     return this.loginUser(newUser);
+  }
+
+  async getUserByEmail(email: string) {
+    return this.usersService.getUserByEmail(email);
+  }
+
+  async updateUser(email: string, userDto: EditUserDto) {
+    
+    return this.usersService.updateUser(email, userDto);
   }
 }
