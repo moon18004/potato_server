@@ -22,9 +22,10 @@ export class PostsService {
           type: TypesEnum.COMMON
         }
       ],
-      relations: {
-        author: true
-      },
+      // relations: {
+      //   author: true
+      // },
+      relations: ['author', 'comments'],
       order: {
         id: 'DESC'
         // type: 'ASC'
@@ -52,9 +53,11 @@ export class PostsService {
           type: TypesEnum.POPULAR
         }
       ],
-      relations: {
-        author: true
-      },
+      // relations: {
+      //   author: true,
+      //   comments: true
+      // },
+      relations: ['author', 'comments'],
       order: {
         // id: 'DESC'
         type: 'ASC'
@@ -66,9 +69,7 @@ export class PostsService {
       where: {
         id
       },
-      relations: {
-        author: true
-      },
+      relations: ['author', 'comments'],
       select: {
         author: {
           id: true,
@@ -77,6 +78,9 @@ export class PostsService {
           country: true,
           role: true,
           countryUrl: true
+        },
+        comments: {
+          id: true
         }
       }
     });
@@ -99,6 +103,7 @@ export class PostsService {
 
     return newPost;
   }
+
   async generatePosts(userId: number) {
     for (let i = 0; i < 100; i++) {
       await this.createPost(userId, {
