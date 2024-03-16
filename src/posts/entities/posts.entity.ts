@@ -4,6 +4,8 @@ import { UsersModel } from 'src/users/entities/users.entity';
 import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { TypesEnum } from '../const/type.const';
 import { CategoryEnum } from '../const/category.const';
+import { OneToMany } from 'typeorm';
+import { PostsCommentsModel } from '../comments/entities/postComments.entity';
 
 @Entity()
 export class PostsModel extends BaseModel {
@@ -14,6 +16,9 @@ export class PostsModel extends BaseModel {
     nullable: false
   })
   author: UsersModel;
+
+  @OneToMany(() => PostsCommentsModel, comments => comments.post)
+  comments: PostsCommentsModel[];
 
   @Column()
   @IsString({

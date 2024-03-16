@@ -13,6 +13,8 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CoursesModel } from './courses/entities/courses.entity';
 import { MailModule } from './mail/mail.module';
 import { ConfigModule } from '@nestjs/config';
+import { PostsCommentsModel } from './posts/comments/entities/postComments.entity';
+import { CommentsModule } from './posts/comments/comments.module';
 
 @Module({
   imports: [
@@ -23,7 +25,7 @@ import { ConfigModule } from '@nestjs/config';
       username: 'postgres',
       password: 'postgres',
       database: 'postgres',
-      entities: [PostsModel, UsersModel, CoursesModel],
+      entities: [PostsModel, UsersModel, CoursesModel, PostsCommentsModel],
       synchronize: true
     }),
     ConfigModule.forRoot({
@@ -35,7 +37,8 @@ import { ConfigModule } from '@nestjs/config';
     UsersModule,
     CoursesModule,
     AuthModule,
-    MailModule
+    MailModule,
+    CommentsModule
   ],
   controllers: [AppController],
   providers: [

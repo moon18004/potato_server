@@ -8,6 +8,7 @@ import { stringValidationMessage } from 'src/common/validation-message/string-va
 import { emailValidationMessage } from 'src/common/validation-message/email-validation.message';
 import { Exclude } from 'class-transformer';
 import { CoursesModel } from 'src/courses/entities/courses.entity';
+import { PostsCommentsModel } from 'src/posts/comments/entities/postComments.entity';
 
 @Entity()
 export class UsersModel extends BaseModel {
@@ -76,4 +77,7 @@ export class UsersModel extends BaseModel {
   @JoinColumn({ name: 'author' })
   posts: PostsModel[];
 
+  @OneToMany(() => PostsCommentsModel, postsComment => postsComment.author)
+  @JoinColumn({ name: 'author' })
+  postsComments: PostsCommentsModel[];
 }
