@@ -13,7 +13,11 @@ export class CoursesService {
     private readonly coursesRepository: Repository<CoursesModel>
   ) {}
   async getCourses() {
-    return await this.coursesRepository.find();
+    return await this.coursesRepository.find({
+      relations: {
+        author: true
+      },
+    });
   }
   async createCourse(author_id: number, courseDto: CreateCourseDto) {
     const course = this.coursesRepository.create({
