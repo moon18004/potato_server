@@ -3,12 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PostsCommentsModel } from './entities/postComments.entity';
 import { Repository } from 'typeorm';
 import { CreatePostCommentDto } from './dto/create-postComment.dto';
+import { PostsService } from '../posts.service';
 
 @Injectable()
 export class CommentsService {
   constructor(
     @InjectRepository(PostsCommentsModel)
-    private readonly commentsRepository: Repository<PostsCommentsModel>
+    private readonly commentsRepository: Repository<PostsCommentsModel>,
+    private readonly postsService: PostsService
   ) {}
 
   async getCommentByPostId(postId: number) {
@@ -52,10 +54,12 @@ export class CommentsService {
       likeCount: 0
     });
     const newComment = await this.commentsRepository.save(comment);
+    const newPost = await this.postsService.editCommentsCount(postId);
+    
     return newComment;
   }
 
-  async deleteComment(userId: number, id: number) {
+  async deleteComment(userId: number, id: number, postId:number) {
     const comment = await this.commentsRepository.findOne({
       where: {
         id
@@ -77,6 +81,7 @@ export class CommentsService {
     }
 
     await this.commentsRepository.delete(id);
+    const newPost = await this.postsService.editCommentsCount(postId);
     return id;
   }
   async updateComment(userId: number, commentDto: CreatePostCommentDto, commentId: number) {

@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
+import { EditUserDto } from 'src/auth/dto/edit-user.dto';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
@@ -22,13 +23,17 @@ export class MailService {
       }
     });
   }
-  async sendMail(to: string) {
+  async sendMail(to: string, forPwd: boolean = false) {
     // console.log('22)');
     // console.log(to);
     const checkUser = await this.usersService.checkUser(to);
     // console.log(checkUser);
-    if (checkUser) {
+
+    if (!forPwd && checkUser) {
       throw new BadRequestException('Email already exists.');
+    }
+    if (forPwd && !checkUser) {
+      throw new BadRequestException("Email doesn't exists.");
     }
 
     this.OTPs[to] = Math.floor(Math.random() * 888889);
@@ -74,6 +79,17 @@ export class MailService {
       return true;
     } else {
       throw new UnauthorizedException('Code is not correct');
+    }
+  }
+  changePasswordByCode(body: EditUserDto) {
+    // console.log(body);
+    // console.log(body.code);
+    // console.log(this.OTPs[body.email]);
+    // const pwdDto = { password: pwd };
+    if (Number(body.code) === this.OTPs[body.email]) {
+      this.usersService.changePwd(body.email, body);
+    } else {
+      throw new UnauthorizedException('Code is expired or wrong. Try with new code');
     }
   }
 }

@@ -115,4 +115,19 @@ export class UsersService {
     // console.log(newUser);
     return newUser;
   }
+
+  async changePwd(email, body) {
+    const { password } = body;
+    const user = await this.userRepository.findOne({
+      where: {
+        email
+      }
+    });
+    if (password) {
+      const hash = await bcrypt.hash(password, HASH_ROUNDS);
+      user.password = hash;
+    }
+    const newUser = await this.userRepository.save(user);
+    return newUser;
+  }
 }

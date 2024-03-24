@@ -10,6 +10,10 @@ export class EditUserDto extends PartialType(RegisterUserDto) {
 
   @IsString()
   @IsOptional()
+  code?: string;
+
+  @IsString()
+  @IsOptional()
   password?: string;
 
   @IsString()

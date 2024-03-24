@@ -21,7 +21,7 @@ export class PostsCommentsModel extends BaseModel {
   })
   author: UsersModel;
 
-	@ManyToOne(() => PostsModel, post => post.comments, {
+  @ManyToOne(() => PostsModel, post => post.comments, {
     nullable: false
   })
   post: PostsModel;

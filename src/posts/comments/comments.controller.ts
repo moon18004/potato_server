@@ -44,7 +44,14 @@ export class CommentsController {
   }
   @Delete(':id')
   @UseGuards(AccessTokenGuard)
-  deleteComment(@Param('id', ParseIntPipe) id: number, @User() user: UsersModel) {
-    return this.commentsService.deleteComment(user.id, id);
+  deleteComment(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() post: string,
+    @User() user: UsersModel
+  ) {
+    // const { postId } = post;
+    console.log(post['postId']);
+    const postId = post['postId'];
+    return this.commentsService.deleteComment(user.id, id, postId);
   }
 }

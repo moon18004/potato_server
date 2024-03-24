@@ -227,4 +227,20 @@ export class PostsService {
 
     return postId;
   }
+  async editCommentsCount(id: number) {
+    const post = await this.postsRepository.findOne({
+      where: {
+        id
+      },
+      relations: {
+        author: true,
+        comments: true
+      }
+    });
+    // console.log(post);
+    // console.log(post.comments.length);
+    post.commentCount = post.comments.length;
+    const updated = await this.postsRepository.save(post);
+    return updated;
+  }
 }
